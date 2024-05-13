@@ -1,52 +1,90 @@
-import { Alert, Button, StyleSheet, TextInput } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Button,
+  StyleSheet,
+  TextInput,
+} from "react-native";
 
 import { Text, View } from "@/components/Themed";
 import { useState } from "react";
 import { TasksRepository } from "@/data/task-repo";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { UserRepository } from "@/data/user-repo";
 
-const tasksRepository = new TasksRepository();
+const userRepository = new UserRepository();
 
 export default function TabTwoScreen() {
-  const [task, setTask] = useState("");
+  const [customerName, setCustomerName] = useState("");
+  const [customerDescription, setCustomerDescription] = useState("");
 
   const client = useQueryClient();
 
-  const createTaskMutation = useMutation({
-    async mutationFn(data: { title: string; description: string }) {
-      return tasksRepository.createTask(data);
+  const createCustomerMutation = useMutation({
+    async mutationFn(data: { name: string; description: string }) {
+      return userRepository.createCustomer(data);
     },
     onSuccess() {
-      return client.invalidateQueries({ queryKey: ["tasks"] });
+      Alert.alert("Customer created successfully");
+      return client.invalidateQueries({ queryKey: ["customers"] });
     },
+    onSettled() {},
   });
 
-  const getTaskQuery = useQuery({
-    queryKey: ["tasks"],
+  const getCustomersQuery = useQuery({
+    queryKey: ["customers"],
     queryFn() {
-      return tasksRepository.getTasks();
+      return userRepository.getCustomers();
     },
   });
 
-  const handleCreateTask = async () => {
+  const handleCreateCustomer = async () => {
     try {
-      await createTaskMutation.mutateAsync({ title: task, description: "" });
-      setTask("");
-    } catch (error) {}
+      await createCustomerMutation.mutateAsync({
+        name: customerName,
+        description: customerDescription,
+      });
+      setCustomerName("");
+      setCustomerDescription("");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Customers pages</Text>
-
-      <View>
+      <Text style={styles.title}>Create Customer</Text>
+      <View style={styles.form_container}>
         <TextInput
-          style={{ borderWidth: 2, padding: 4, width: "100%" }}
-          placeholder="Enter a task here"
-          value={task}
-          onChangeText={setTask}
+          value={customerName}
+          onChangeText={setCustomerName}
+          style={styles.input}
+          placeholder="name of customer"
         />
-        <Button onPress={handleCreateTask} title="Submit" />
+        <TextInput
+          value={customerDescription}
+          onChangeText={setCustomerDescription}
+          style={[styles.input, styles.textarea]}
+          placeholder="description"
+        />
+        <View style={{ alignSelf: "flex-start" }}>
+          <Button title="Create Customer" onPress={handleCreateCustomer} />
+        </View>
+      </View>
+
+      <Text style={styles.title}>Current Customers</Text>
+      <View style={{ backgroundColor: "gray", padding: 5, borderRadius: 4 }}>
+        {getCustomersQuery.isLoading && <ActivityIndicator />}
+        {getCustomersQuery.isError && (
+          <Text>{getCustomersQuery.error.message}</Text>
+        )}
+        {getCustomersQuery.isSuccess &&
+          getCustomersQuery.data.map((customer) => (
+            <View key={customer.id}>
+              <Text>{customer.name}</Text>
+              <Text>Created {customer?.createdAt?.toLocaleDateString()}</Text>
+            </View>
+          ))}
       </View>
     </View>
   );
@@ -55,9 +93,8 @@ export default function TabTwoScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
     gap: 20,
+    padding: 3,
   },
   title: {
     fontSize: 20,
@@ -67,5 +104,19 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: "80%",
+  },
+  form_container: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 10,
+  },
+  input: {
+    borderWidth: 2,
+    padding: 10,
+    width: "100%",
+    borderRadius: 5,
+  },
+  textarea: {
+    height: 100,
   },
 });
