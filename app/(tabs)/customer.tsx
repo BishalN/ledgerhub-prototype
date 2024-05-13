@@ -1,10 +1,4 @@
-import {
-  ActivityIndicator,
-  Alert,
-  Button,
-  StyleSheet,
-  TextInput,
-} from "react-native";
+import { Alert, Button, StyleSheet, TextInput } from "react-native";
 
 import { Text, View } from "@/components/Themed";
 import { useState } from "react";
@@ -38,22 +32,12 @@ export default function TabTwoScreen() {
     try {
       await createTaskMutation.mutateAsync({ title: task, description: "" });
       setTask("");
-    } catch (error) {
-      // Alert.alert("Error", error.message);
-    }
+    } catch (error) {}
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Customers pages</Text>
-
-      {getTaskQuery.isLoading ? (
-        <ActivityIndicator />
-      ) : (
-        getTaskQuery.data?.map((task) => (
-          <Text key={task.id}>{task.title}</Text>
-        ))
-      )}
 
       <View>
         <TextInput
