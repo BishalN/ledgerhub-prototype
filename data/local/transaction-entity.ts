@@ -20,11 +20,8 @@ export class TransactionEntity extends BaseEntity {
   @Column()
   type: "receivable" | "received" | "payable" | "paid";
 
-  @ManyToOne(() => UserEntity, (UserEntity) => UserEntity.id)
-  payer: UserEntity;
-
-  @ManyToOne(() => UserEntity, (UserEntity) => UserEntity.id)
-  payee: UserEntity;
+  @ManyToOne(() => UserEntity, (UserEntity) => UserEntity.id, { eager: true })
+  user: UserEntity;
 
   @CreateDateColumn() createdAt: Date;
   @UpdateDateColumn() updatedAt: Date;

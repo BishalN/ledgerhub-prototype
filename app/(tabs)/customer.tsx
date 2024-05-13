@@ -8,13 +8,18 @@ import {
 
 import { Text, View } from "@/components/Themed";
 import { useState } from "react";
-import { TasksRepository } from "@/data/task-repo";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { UserRepository } from "@/data/user-repo";
+import { UserEntity } from "@/data/local/user-entity";
+import { styled } from "nativewind";
 
 const userRepository = new UserRepository();
 
-export default function TabTwoScreen() {
+const StyledView = styled(View);
+const StyledText = styled(Text);
+
+// TODO: use flat list to render customers and add a search by name feature
+export default function CustomerScreen() {
   const [customerName, setCustomerName] = useState("");
   const [customerDescription, setCustomerDescription] = useState("");
 
@@ -73,22 +78,33 @@ export default function TabTwoScreen() {
       </View>
 
       <Text style={styles.title}>Current Customers</Text>
-      <View style={{ backgroundColor: "gray", padding: 5, borderRadius: 4 }}>
+      <View style={{ display: "flex", gap: 7, flexDirection: "column" }}>
         {getCustomersQuery.isLoading && <ActivityIndicator />}
         {getCustomersQuery.isError && (
           <Text>{getCustomersQuery.error.message}</Text>
         )}
         {getCustomersQuery.isSuccess &&
           getCustomersQuery.data.map((customer) => (
-            <View key={customer.id}>
-              <Text>{customer.name}</Text>
-              <Text>Created {customer?.createdAt?.toLocaleDateString()}</Text>
-            </View>
+            <CustomerItem key={customer.id} customer={customer} />
           ))}
       </View>
     </View>
   );
 }
+
+export const CustomerItem = ({ customer }: { customer: UserEntity }) => {
+  return (
+    <StyledView className="bg-gray-300 p-3 rounded-md shadow-md">
+      <StyledText>{customer.name}</StyledText>
+      <StyledText>{customer.description}</StyledText>
+      <Text>{customer.createdAt?.toLocaleDateString()}</Text>
+      <View className="flex flex-row bg-gray-300 ">
+        <Button title="Delete" onPress={() => {}} />
+        <Button title="Edit" onPress={() => {}} />
+      </View>
+    </StyledView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

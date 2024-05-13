@@ -1,3 +1,4 @@
+import { Like } from "typeorm";
 import { source } from "./local/database";
 import { UserEntity } from "./local/user-entity";
 
@@ -19,6 +20,26 @@ export class UserRepository {
 
     const customer = await UserEntity.findOneByOrFail({
       id: customerId,
+    });
+    return customer;
+  }
+
+  async getCustomersByName(
+    customerName: UserEntity["name"]
+  ): Promise<UserEntity[]> {
+    if (!source.isInitialized) await source.initialize();
+
+    // find many user
+    const customer = await UserEntity.find({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+      },
+      where: {
+        name: Like(`%${customerName}%`),
+        role: "customer",
+      },
     });
     return customer;
   }

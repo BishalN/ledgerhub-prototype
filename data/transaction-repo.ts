@@ -22,23 +22,20 @@ export class TransactionRepository {
   }
 
   async createTransaction(
-    payload: Pick<TransactionEntity, "amount" | "type" | "payer" | "payee">
+    payload: Pick<TransactionEntity, "amount" | "type" | "user">
   ) {
     if (!source.isInitialized) await source.initialize();
 
     const transaction = new TransactionEntity();
     transaction.amount = payload.amount;
     transaction.type = payload.type;
-    transaction.payer = payload.payer;
-    transaction.payee = payload.payee;
+    transaction.user = payload.user;
     await transaction.save();
   }
 
   async updateTransaction(
     transactionId: TransactionEntity["id"],
-    payload: Partial<
-      Pick<TransactionEntity, "amount" | "type" | "payer" | "payee">
-    >
+    payload: Partial<Pick<TransactionEntity, "amount" | "type" | "user">>
   ) {
     if (!source.isInitialized) await source.initialize();
 
@@ -47,8 +44,7 @@ export class TransactionRepository {
     });
     transaction.amount = payload.amount ?? transaction.amount;
     transaction.type = payload.type ?? transaction.type;
-    transaction.payer = payload.payer ?? transaction.payer;
-    transaction.payee = payload.payee ?? transaction.payee;
+    transaction.user = payload.user ?? transaction.user;
     await transaction.save();
   }
 

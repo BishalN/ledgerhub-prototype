@@ -14,56 +14,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 const tasksRepository = new TasksRepository();
 
 export default function TabTwoScreen() {
-  const [task, setTask] = useState("");
-
-  const client = useQueryClient();
-
-  const createTaskMutation = useMutation({
-    async mutationFn(data: { title: string; description: string }) {
-      return tasksRepository.createTask(data);
-    },
-    onSuccess() {
-      return client.invalidateQueries({ queryKey: ["tasks"] });
-    },
-  });
-
-  const getTaskQuery = useQuery({
-    queryKey: ["tasks"],
-    queryFn() {
-      return tasksRepository.getTasks();
-    },
-  });
-
-  const handleCreateTask = async () => {
-    try {
-      await createTaskMutation.mutateAsync({ title: task, description: "" });
-      setTask("");
-    } catch (error) {
-      // Alert.alert("Error", error.message);
-    }
-  };
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Customers pages</Text>
-
-      {getTaskQuery.isLoading ? (
-        <ActivityIndicator />
-      ) : (
-        getTaskQuery.data?.map((task) => (
-          <Text key={task.id}>{task.title}</Text>
-        ))
-      )}
-
-      <View>
-        <TextInput
-          style={{ borderWidth: 2, padding: 4, width: "100%" }}
-          placeholder="Enter a task here"
-          value={task}
-          onChangeText={setTask}
-        />
-        <Button onPress={handleCreateTask} title="Submit" />
-      </View>
+      <Text style={styles.title}>Reports</Text>
     </View>
   );
 }

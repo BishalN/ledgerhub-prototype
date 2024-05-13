@@ -9,4 +9,5 @@ export const source = new DataSource({
   driver: require("expo-sqlite"),
   entities: [TaskEntity, UserEntity, TransactionEntity],
   synchronize: true,
+  logging: true,
 });
