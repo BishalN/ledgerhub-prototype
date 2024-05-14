@@ -55,6 +55,7 @@ export default function TransactionScreen() {
       // show success alert
       Alert.alert("Transaction created successfully");
       client.invalidateQueries({ queryKey: ["transactions"] });
+      client.invalidateQueries({ queryKey: ["wholeReport"] });
     },
   });
 
@@ -66,6 +67,7 @@ export default function TransactionScreen() {
       // show success alert
       Alert.alert("Transaction deleted successfully");
       client.invalidateQueries({ queryKey: ["transactions"] });
+      client.invalidateQueries({ queryKey: ["wholeReport"] });
     },
   });
 
@@ -78,6 +80,7 @@ export default function TransactionScreen() {
       // show success alert
       Alert.alert("Transaction updated successfully");
       client.invalidateQueries({ queryKey: ["transactions"] });
+      client.invalidateQueries({ queryKey: ["wholeReport"] });
     },
   });
 
