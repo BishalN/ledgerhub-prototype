@@ -7,7 +7,6 @@ import {
   TextInput,
 } from "react-native";
 
-import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { TransactionRepository } from "@/data/transaction-repo";
@@ -163,14 +162,9 @@ export default function TransactionScreen() {
             getCustomersByNameQuery.data?.map((customer) => ({
               label: customer.name,
               value: customer,
-            }))! ?? [
-              {
-                label: "Loading",
-                value: "",
-              },
-            ]
+            })) as any[]
           }
-          selectedValue={formState?.user!}
+          selectedValue={formState?.user! as any}
           onValueChange={(value: UserEntity) =>
             setFormState({ ...formState!, user: value })
           }

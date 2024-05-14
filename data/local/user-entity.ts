@@ -26,15 +26,9 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(
     () => TransactionEntity,
-    (TransactionEntity) => TransactionEntity.payer
+    (TransactionEntity) => TransactionEntity.user
   )
-  outgoingTransactions: TransactionEntity[];
-
-  @OneToMany(
-    () => TransactionEntity,
-    (TransactionEntity) => TransactionEntity.payee
-  )
-  incomingTransactions: TransactionEntity[];
+  transactions: TransactionEntity[];
 
   @CreateDateColumn() createdAt: Date;
   @UpdateDateColumn() updatedAt: Date;

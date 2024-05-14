@@ -9,7 +9,6 @@ import {
 
 import { Text, View } from "@/components/Themed";
 import { useState } from "react";
-import { TasksRepository } from "@/data/task-repo";
 import { useQuery } from "@tanstack/react-query";
 import Dropdown from "react-native-input-select";
 
@@ -20,7 +19,6 @@ import { UserEntity } from "@/data/local/user-entity";
 import { PieData } from "@/components/report-piechart";
 import { ReportPieChart } from "@/components/report-piechart";
 
-const tasksRepository = new TasksRepository();
 const userRepository = new UserRepository();
 
 export default function ReportsScreen() {
@@ -75,20 +73,16 @@ export default function ReportsScreen() {
           textInputProps: {
             value: userSearch,
             onChangeText: (text) => setUserSearch(text),
+            placeholder: "Search a user...",
           },
         }}
         options={
           getCustomersByNameQuery.data?.map((customer) => ({
             label: customer.name,
             value: customer,
-          }))! ?? [
-            {
-              label: "Loading",
-              value: "",
-            },
-          ]
+          })) as any[]
         }
-        selectedValue={selectedUser!}
+        selectedValue={selectedUser! as any}
         onValueChange={(value: UserEntity) => setSelectedUser(value)}
         primaryColor={"green"}
       />
