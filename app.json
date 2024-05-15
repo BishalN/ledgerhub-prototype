@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "router-ledgerhub",
-    "slug": "router-ledgerhub",
+    "name": "ledgerhub",
+    "slug": "ledgerhub",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -16,13 +16,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bishaln.ledgerhub"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.bishaln.ledgerhub"
     },
     "web": {
       "bundler": "metro",
@@ -34,6 +36,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "540721de-825e-4b53-a99f-3926a06561a2"
+      }
     }
   }
 }
